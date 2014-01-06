@@ -23,7 +23,7 @@ public class XMLRenderering implements XMLClause {
         }};
     }
 
-    public static Expectation xml(final Matcher<String> resultMatcher) {
+    public static Expectation result(final Matcher<String> resultMatcher) {
         return new Expectation() {
             public void check(XMLRenderering source) {
                 assertThat(source.rendered, is(true));

@@ -23,7 +23,7 @@ public class EmbodyTest {
     @Test
     public void includeText() throws Exception {
         embody.include("text");
-        render(embody).expect(xml(equalTo("text")));
+        render(embody).expect(result(equalTo("text")));
     }
 
     @Test
@@ -35,7 +35,7 @@ public class EmbodyTest {
     @Test
     public void include() throws Exception {
         embody.include(content("<element/>"));
-        render(embody).expect(xml(equalTo("<element/>")));
+        render(embody).expect(result(equalTo("<element/>")));
     }
 
 }

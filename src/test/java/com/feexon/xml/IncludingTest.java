@@ -15,7 +15,7 @@ public class IncludingTest {
 
     @Test
     public void include() throws Exception {
-        render(content("<abc/>")).expect(xml(equalTo("<abc/>")));
+        render(content("<abc/>")).expect(result(equalTo("<abc/>")));
     }
 
     @Test

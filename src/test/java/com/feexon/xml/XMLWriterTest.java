@@ -12,7 +12,7 @@ import java.io.Writer;
 
 import static com.feexon.xml.XMLWriter.element;
 import static com.feexon.xml.supports.XMLRenderering.render;
-import static com.feexon.xml.supports.XMLRenderering.xml;
+import static com.feexon.xml.supports.XMLRenderering.result;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -39,32 +39,32 @@ public class XMLWriterTest {
     @Test
     public void includeAnEmptyElement() throws Exception {
         writer.include(element("content").withNoText());
-        rendering().expect(xml(equalTo("<content/>")));
+        rendering().expect(result(equalTo("<content/>")));
     }
 
     @Test
     public void includeAnElementWithNullText() throws Exception {
         writer.include(element("content").withText(null));
-        rendering().expect(xml(equalTo("<content></content>")));
+        rendering().expect(result(equalTo("<content></content>")));
     }
 
     @Test
     public void includeAnElementWithEmptyString() throws Exception {
         writer.include(element("content").withText(""));
-        rendering().expect(xml(equalTo("<content></content>")));
+        rendering().expect(result(equalTo("<content></content>")));
     }
 
     @Test
     public void includeAnElementWithTextIncludingCDATA() throws Exception {
         writer.include(element("content").withText("abc"));
-        rendering().expect(xml(equalTo("<content><![CDATA[abc]]></content>")));
+        rendering().expect(result(equalTo("<content><![CDATA[abc]]></content>")));
     }
 
     @Test
     public void includeElements() throws Exception {
         writer.include(element("first").withNoText());
         writer.include(element("last").withText("foo"));
-        rendering().expect(xml(equalTo("<first/><last><![CDATA[foo]]></last>")));
+        rendering().expect(result(equalTo("<first/><last><![CDATA[foo]]></last>")));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class XMLWriterTest {
         writer.include(element("xml").surround(new Embody() {{
             include(element("content").withNoText());
         }}));
-        rendering().expect(xml(equalTo("<xml><content/></xml>")));
+        rendering().expect(result(equalTo("<xml><content/></xml>")));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class XMLWriterTest {
             include(element("first").withNoText());
             include(element("last").withNoText());
         }}));
-        rendering().expect(xml(equalTo("<xml><first/><last/></xml>")));
+        rendering().expect(result(equalTo("<xml><first/><last/></xml>")));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class XMLWriterTest {
             include(element("same").withNoText());
             include(element("same").withNoText());
         }}));
-        rendering().expect(xml(equalTo("<xml><same/><same/></xml>")));
+        rendering().expect(result(equalTo("<xml><same/><same/></xml>")));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class XMLWriterTest {
                 include(element("article").withText("java"));
             }}));
         }}));
-        rendering().expect(xml(equalTo("<xml><articles><article><![CDATA[java]]></article></articles></xml>")));
+        rendering().expect(result(equalTo("<xml><articles><article><![CDATA[java]]></article></articles></xml>")));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class XMLWriterTest {
         writer.include(element("xml").surround(new Embody() {{
             include(element("nested").withNoText());
         }}));
-        rendering().expect(xml(equalTo("<xml><nested/></xml>")));
+        rendering().expect(result(equalTo("<xml><nested/></xml>")));
     }
 
 
