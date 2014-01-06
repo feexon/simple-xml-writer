@@ -1,7 +1,9 @@
 package com.feexon.xml;
 
 
-import org.hamcrest.Matcher;
+import com.feexon.xml.supports.XMLRenderering;
+import com.feexon.xml.syntax.XMLBuilder;
+import com.feexon.xml.syntax.XMLClause;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -9,6 +11,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import static com.feexon.xml.XMLWriter.element;
+import static com.feexon.xml.supports.XMLRenderering.render;
+import static com.feexon.xml.supports.XMLRenderering.xml;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -23,40 +27,44 @@ public class XMLWriterTest {
 
     private XMLWriter writer = new XMLWriter(result);
 
-    private void assertResult(Matcher<String> matcher) {
-        assertThat(result.toString(), matcher);
+    private XMLRenderering rendering() throws IOException {
+        return render(new XMLBuilder() {
+            public void writeTo(XMLClause writer) throws IOException {
+                writer.include(result.toString());
+            }
+        });
     }
 
 
     @Test
     public void includeAnEmptyElement() throws Exception {
         writer.include(element("content").withNoText());
-        assertResult(equalTo("<content/>"));
+        rendering().expect(xml(equalTo("<content/>")));
     }
 
     @Test
     public void includeAnElementWithNullText() throws Exception {
         writer.include(element("content").withText(null));
-        assertResult(equalTo("<content></content>"));
+        rendering().expect(xml(equalTo("<content></content>")));
     }
 
     @Test
     public void includeAnElementWithEmptyString() throws Exception {
         writer.include(element("content").withText(""));
-        assertResult(equalTo("<content></content>"));
+        rendering().expect(xml(equalTo("<content></content>")));
     }
 
     @Test
     public void includeAnElementWithTextIncludingCDATA() throws Exception {
         writer.include(element("content").withText("abc"));
-        assertResult(equalTo("<content><![CDATA[abc]]></content>"));
+        rendering().expect(xml(equalTo("<content><![CDATA[abc]]></content>")));
     }
 
     @Test
     public void includeElements() throws Exception {
         writer.include(element("first").withNoText());
         writer.include(element("last").withText("foo"));
-        assertResult(equalTo("<first/><last><![CDATA[foo]]></last>"));
+        rendering().expect(xml(equalTo("<first/><last><![CDATA[foo]]></last>")));
     }
 
     @Test
@@ -64,7 +72,7 @@ public class XMLWriterTest {
         writer.include(element("xml").surround(new Embody() {{
             include(element("content").withNoText());
         }}));
-        assertResult(equalTo("<xml><content/></xml>"));
+        rendering().expect(xml(equalTo("<xml><content/></xml>")));
     }
 
     @Test
@@ -73,7 +81,7 @@ public class XMLWriterTest {
             include(element("first").withNoText());
             include(element("last").withNoText());
         }}));
-        assertResult(equalTo("<xml><first/><last/></xml>"));
+        rendering().expect(xml(equalTo("<xml><first/><last/></xml>")));
     }
 
     @Test
@@ -82,7 +90,7 @@ public class XMLWriterTest {
             include(element("same").withNoText());
             include(element("same").withNoText());
         }}));
-        assertResult(equalTo("<xml><same/><same/></xml>"));
+        rendering().expect(xml(equalTo("<xml><same/><same/></xml>")));
     }
 
     @Test
@@ -92,7 +100,7 @@ public class XMLWriterTest {
                 include(element("article").withText("java"));
             }}));
         }}));
-        assertResult(equalTo("<xml><articles><article><![CDATA[java]]></article></articles></xml>"));
+        rendering().expect(xml(equalTo("<xml><articles><article><![CDATA[java]]></article></articles></xml>")));
     }
 
     @Test
@@ -112,7 +120,7 @@ public class XMLWriterTest {
         writer.include(element("xml").surround(new Embody() {{
             include(element("nested").withNoText());
         }}));
-        assertResult(equalTo("<xml><nested/></xml>"));
+        rendering().expect(xml(equalTo("<xml><nested/></xml>")));
     }
 
 
