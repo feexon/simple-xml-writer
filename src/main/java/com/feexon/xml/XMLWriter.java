@@ -28,6 +28,9 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
     }
 
     static private String data(Object value) {
+        if(value==null){
+            return "";
+        }
         return "<![CDATA[" + value + "]]>";
     }
 

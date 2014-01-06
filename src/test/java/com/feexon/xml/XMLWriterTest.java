@@ -35,6 +35,12 @@ public class XMLWriterTest {
     }
 
     @Test
+    public void writeAnElementWithNullText() throws Exception {
+        writer.include(element("content").withText(null));
+        assertResult(equalTo("<content></content>"));
+    }
+
+    @Test
     public void writeElements() throws Exception {
         writer.include(element("first").withNoText());
         writer.include(element("last").withText("foo"));
