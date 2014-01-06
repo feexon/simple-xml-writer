@@ -61,20 +61,16 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
 
         public void writeTo(XMLClause writer) throws IOException {
             if (body != null) {
-                writer.include(startTag(name));
+                writer.include(startTag());
                 body.writeTo(writer);
-                writer.include(endTag(name));
+                writer.include(endTag());
             } else {
                 writer.include("<" + name + "/>");
             }
         }
 
-        static private String startTag(String name) {
+        private String startTag() {
             return "<" + name + ">";
-        }
-
-        static private String endTag(String name) {
-            return "</" + name + ">";
         }
 
         static private String data(Object value) {
@@ -82,6 +78,10 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
                 return "";
             }
             return "<![CDATA[" + value + "]]>";
+        }
+
+        private String endTag() {
+            return "</" + name + ">";
         }
 
     }
