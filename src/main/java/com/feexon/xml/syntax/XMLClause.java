@@ -8,7 +8,7 @@ import java.io.IOException;
  */
 public interface XMLClause {
 
-    void include(ElementBuilder builder) throws IOException;
+    void include(XMLBuilder builder) throws IOException;
 
     void include(String xml) throws IOException;
 }

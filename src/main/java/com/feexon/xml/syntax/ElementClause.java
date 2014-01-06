@@ -7,9 +7,9 @@ import java.io.IOException;
 * @version 1.0 14-1-6,上午10:40
 */
 public interface ElementClause {
-    ElementBuilder withText(Object value) throws IOException;
+    XMLBuilder withText(Object value) throws IOException;
 
-    ElementBuilder withNoText() throws IOException;
+    XMLBuilder withNoText() throws IOException;
 
-    ElementBuilder surround(ElementBuilder body);
+    XMLBuilder surround(XMLBuilder body);
 }

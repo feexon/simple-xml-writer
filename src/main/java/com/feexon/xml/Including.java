@@ -1,6 +1,6 @@
 package com.feexon.xml;
 
-import com.feexon.xml.syntax.ElementBuilder;
+import com.feexon.xml.syntax.XMLBuilder;
 import com.feexon.xml.syntax.XMLClause;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.IOException;
 * @author Administrator
 * @version 1.0 14-1-4,下午6:53
 */
-public class Including implements ElementBuilder {
+public class Including implements XMLBuilder {
     private final String body;
 
     private Including(String body) {

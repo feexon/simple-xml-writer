@@ -1,6 +1,6 @@
 package com.feexon.xml;
 
-import com.feexon.xml.syntax.ElementBuilder;
+import com.feexon.xml.syntax.XMLBuilder;
 import com.feexon.xml.syntax.ElementClause;
 import com.feexon.xml.syntax.XMLClause;
 
@@ -30,7 +30,7 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
     }
 
     static private String data(Object value) {
-        if(value==null){
+        if(value==null||value.equals("")){
             return "";
         }
         return "<![CDATA[" + value + "]]>";
@@ -41,35 +41,35 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
         out.write(xml);
     }
 
-    public void include(ElementBuilder builder) throws IOException {
+    public void include(XMLBuilder builder) throws IOException {
         builder.writeTo(this);
     }
 
-    static public ElementBuilder content(String content){
+    static public XMLBuilder content(String content){
         return Including.content(content);
     }
 
     static public ElementClause element(final String name) {
-        return new ElementWriter(name);
+        return new ElementBuilder(name);
     }
 
-    private static class ElementWriter implements ElementClause, ElementBuilder {
+    private static class ElementBuilder implements ElementClause, XMLBuilder {
         private final String name;
-        public ElementBuilder body;
+        public XMLBuilder body;
 
-        public ElementWriter(String name) {
+        public ElementBuilder(String name) {
             this.name = name;
         }
 
-        public ElementBuilder withText(Object value) throws IOException {
+        public XMLBuilder withText(Object value) throws IOException {
             return surround(content(data(value)));
         }
 
-        public ElementBuilder withNoText() throws IOException {
+        public XMLBuilder withNoText() throws IOException {
             return this;
         }
 
-        public ElementBuilder surround(ElementBuilder body) {
+        public XMLBuilder surround(XMLBuilder body) {
             this.body = body;
             return this;
         }

@@ -1,8 +1,6 @@
 package com.feexon.xml;
 
 
-import com.feexon.xml.syntax.ElementBuilder;
-import com.feexon.xml.syntax.XMLClause;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
@@ -31,46 +29,38 @@ public class XMLWriterTest {
 
 
     @Test
-    public void writeAnEmptyElement() throws Exception {
+    public void includeAnEmptyElement() throws Exception {
         writer.include(element("content").withNoText());
         assertResult(equalTo("<content/>"));
     }
 
     @Test
-    public void writeAnElementWithNullText() throws Exception {
+    public void includeAnElementWithNullText() throws Exception {
         writer.include(element("content").withText(null));
         assertResult(equalTo("<content></content>"));
     }
 
     @Test
-    public void writeElements() throws Exception {
+    public void includeAnElementWithEmptyString() throws Exception {
+        writer.include(element("content").withText(""));
+        assertResult(equalTo("<content></content>"));
+    }
+
+    @Test
+    public void includeAnElementWithTextIncludingCDATA() throws Exception {
+        writer.include(element("content").withText("abc"));
+        assertResult(equalTo("<content><![CDATA[abc]]></content>"));
+    }
+
+    @Test
+    public void includeElements() throws Exception {
         writer.include(element("first").withNoText());
         writer.include(element("last").withText("foo"));
         assertResult(equalTo("<first/><last><![CDATA[foo]]></last>"));
     }
 
     @Test
-    public void writeAnElementWithEmptyString() throws Exception {
-        writer.include(element("content").withText(""));
-        assertResult(equalTo("<content><![CDATA[]]></content>"));
-    }
-
-    @Test
-    public void writeAnElementWithTextIncludingCDATA() throws Exception {
-        writer.include(element("content").withText("abc"));
-        assertResult(equalTo("<content><![CDATA[abc]]></content>"));
-    }
-
-    @Test
     public void surrounding() throws Exception {
-        writer.include(element("xml").surround(new Embody() {{
-            include(element("content").withNoText());
-        }}));
-        assertResult(equalTo("<xml><content/></xml>"));
-    }
-
-    @Test
-    public void surrounding2() throws Exception {
         writer.include(element("xml").surround(new Embody() {{
             include(element("content").withNoText());
         }}));
@@ -87,7 +77,7 @@ public class XMLWriterTest {
     }
 
     @Test
-    public void surroundWithSameElementMoreTimes() throws Exception {
+    public void surroundWithSameElementMultiTimes() throws Exception {
         writer.include(element("xml").surround(new Embody() {{
             include(element("same").withNoText());
             include(element("same").withNoText());
@@ -96,7 +86,7 @@ public class XMLWriterTest {
     }
 
     @Test
-    public void surroundWithElement() throws Exception {
+    public void surroundings() throws Exception {
         writer.include(element("xml").surround(new Embody() {{
             include(element("articles").surround(new Embody() {{
                 include(element("article").withText("java"));
@@ -118,34 +108,13 @@ public class XMLWriterTest {
     }
 
     @Test
-    public void include() throws Exception {
-        writer.include(new ElementBuilder() {
-            public void writeTo(XMLClause writer) throws IOException {
-                writer.include("<nested/>");
-            }
-        });
-        assertResult(equalTo("<nested/>"));
-    }
-
-    @Test
-    public void includeWithSurrounding() throws Exception {
+    public void nestedSurrounding() throws Exception {
         writer.include(element("xml").surround(new Embody() {{
-            include(new ElementBuilder() {
-                public void writeTo(XMLClause writer) throws IOException {
-                    writer.include("<nested/>");
-                }
-            });
+            include(element("nested").withNoText());
         }}));
         assertResult(equalTo("<xml><nested/></xml>"));
     }
 
-    @Test
-    public void includeTextWithSurrounding() throws Exception {
-        writer.include(element("xml").surround(new Embody() {{
-            include("<text/>");
-        }}));
-        assertResult(equalTo("<xml><text/></xml>"));
-    }
 
 
     @Test
