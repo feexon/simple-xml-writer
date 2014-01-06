@@ -2,6 +2,7 @@ package com.feexon.xml;
 
 
 import com.feexon.xml.supports.XMLRenderering;
+import com.feexon.xml.syntax.ElementClause;
 import com.feexon.xml.syntax.XMLBuilder;
 import com.feexon.xml.syntax.XMLClause;
 import org.junit.Test;
@@ -105,10 +106,9 @@ public class XMLWriterTest {
 
     @Test
     public void should_includeSelf_raiseException() throws Exception {
+        ElementClause element = element("xml");
         try {
-            writer.include(element("xml").surround(new Embody() {{
-                include(this);
-            }}));
+            element.surround(element.withNoText());
             fail("should raise exception");
         } catch (IllegalArgumentException expected) {
 
@@ -122,7 +122,6 @@ public class XMLWriterTest {
         }}));
         rendering().expect(result(equalTo("<xml><nested/></xml>")));
     }
-
 
 
     @Test
@@ -141,14 +140,14 @@ public class XMLWriterTest {
 
     private static class WriterSpy extends Writer {
         private boolean closed = false;
-        private Boolean flashed=false;
+        private Boolean flashed = false;
 
         public void write(char[] buff, int off, int len) throws IOException {
 
         }
 
         public void flush() throws IOException {
-            flashed=true;
+            flashed = true;
         }
 
         public void close() throws IOException {
@@ -160,7 +159,7 @@ public class XMLWriterTest {
         }
 
         public void assertFlushed() {
-            assertThat(flashed,equalTo(true));
+            assertThat(flashed, equalTo(true));
         }
     }
 }

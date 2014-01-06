@@ -3,9 +3,12 @@ package com.feexon.xml;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static com.feexon.xml.XMLWriter.content;
 import static com.feexon.xml.supports.XMLRenderering.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.fail;
 
 /**
  * @author Administrator
@@ -38,4 +41,12 @@ public class EmbodyTest {
         render(embody).expect(result(equalTo("<element/>")));
     }
 
+    @Test
+    public void should_includeSelf_raiseException() throws Exception {
+        try {
+            embody.include(embody);
+            fail("should raise exception");
+        } catch (IllegalArgumentException expected) {
+        }
+    }
 }

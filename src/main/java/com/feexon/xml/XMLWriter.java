@@ -51,12 +51,19 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
         }
 
         public XMLBuilder withText(Object value) throws IOException {
-            return surround(content(data(value)));
+            return surroundWith(content(data(value)));
+        }
+
+        private XMLBuilder surroundWith(XMLBuilder body) {
+            this.body = body;
+            return this;
         }
 
         public XMLBuilder surround(XMLBuilder body) {
-            this.body = body;
-            return this;
+            if(body==this){
+                throw new IllegalArgumentException("Surrounding with self!");
+            }
+            return surroundWith(body);
         }
 
         public void writeTo(XMLClause writer) throws IOException {

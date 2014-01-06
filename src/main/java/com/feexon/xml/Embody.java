@@ -17,12 +17,16 @@ public class Embody implements XMLClause, XMLBuilder {
     private List<XMLBuilder> builders = new ArrayList<XMLBuilder>();
 
     public void include(final String content) throws IOException {
-        include(content(content));
+        add(content(content));
+    }
+
+    private void add(XMLBuilder builder) {
+        builders.add(builder);
     }
 
     public void include(final XMLBuilder builder) throws IOException {
         checking(builder);
-        builders.add(builder);
+        add(builder);
     }
 
     private void checking(Object definition) {
