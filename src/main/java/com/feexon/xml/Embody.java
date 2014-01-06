@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.feexon.xml.Including.content;
+
 /**
  * @author Administrator
  * @version 1.0 14-1-4,下午5:25
@@ -14,19 +16,19 @@ import java.util.List;
 public class Embody implements XMLClause, XMLBuilder {
     private List<XMLBuilder> builders = new ArrayList<XMLBuilder>();
 
-    private void checking(Object definition) {
-        if (definition == this) {
-            throw new IllegalArgumentException("Include self!");
-        }
-    }
-
     public void include(final String content) throws IOException {
-        include(Including.content(content));
+        include(content(content));
     }
 
     public void include(final XMLBuilder builder) throws IOException {
         checking(builder);
         builders.add(builder);
+    }
+
+    private void checking(Object definition) {
+        if (definition == this) {
+            throw new IllegalArgumentException("Include self!");
+        }
     }
 
     public void writeTo(XMLClause writer) throws IOException {

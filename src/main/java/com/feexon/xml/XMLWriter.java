@@ -21,36 +21,21 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
         this.out = out;
     }
 
-    static private String startTag(String name) {
-        return "<" + name + ">";
+
+    static public XMLBuilder content(String content) {
+        return Including.content(content);
     }
 
-    static private String endTag(String name) {
-        return "</" + name + ">";
-    }
-
-    static private String data(Object value) {
-        if(value==null||value.equals("")){
-            return "";
-        }
-        return "<![CDATA[" + value + "]]>";
-    }
-
-
-    public void include(String xml) throws IOException {
-        out.write(xml);
+    static public ElementClause element(final String name) {
+        return new ElementBuilder(name);
     }
 
     public void include(XMLBuilder builder) throws IOException {
         builder.writeTo(this);
     }
 
-    static public XMLBuilder content(String content){
-        return Including.content(content);
-    }
-
-    static public ElementClause element(final String name) {
-        return new ElementBuilder(name);
+    public void include(String xml) throws IOException {
+        out.write(xml);
     }
 
     private static class ElementBuilder implements ElementClause, XMLBuilder {
@@ -61,12 +46,12 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
             this.name = name;
         }
 
-        public XMLBuilder withText(Object value) throws IOException {
-            return surround(content(data(value)));
-        }
-
         public XMLBuilder withNoText() throws IOException {
             return this;
+        }
+
+        public XMLBuilder withText(Object value) throws IOException {
+            return surround(content(data(value)));
         }
 
         public XMLBuilder surround(XMLBuilder body) {
@@ -84,6 +69,20 @@ public class XMLWriter implements XMLClause, Closeable, Flushable {
             }
         }
 
+        static private String startTag(String name) {
+            return "<" + name + ">";
+        }
+
+        static private String endTag(String name) {
+            return "</" + name + ">";
+        }
+
+        static private String data(Object value) {
+            if (value == null || value.equals("")) {
+                return "";
+            }
+            return "<![CDATA[" + value + "]]>";
+        }
 
     }
 
