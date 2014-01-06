@@ -17,21 +17,6 @@ public class XMLRenderering implements XMLClause {
     private StringBuilder out = new StringBuilder();
     private boolean rendered = false;
 
-    public static XMLRenderering render(final XMLBuilder builder) throws IOException {
-        return new XMLRenderering() {{
-            builder.writeTo(this);
-        }};
-    }
-
-    public static Expectation result(final Matcher<String> resultMatcher) {
-        return new Expectation() {
-            public void check(XMLRenderering source) {
-                assertThat(source.rendered, is(true));
-                assertThat(source.out.toString(), resultMatcher);
-            }
-        };
-    }
-
     public void include(XMLBuilder builder) throws IOException {
         builder.writeTo(this);
     }
@@ -41,13 +26,28 @@ public class XMLRenderering implements XMLClause {
         out.append(xml);
     }
 
+    public static XMLRenderering render(final XMLBuilder builder) throws IOException {
+        return new XMLRenderering() {{
+            builder.writeTo(this);
+        }};
+    }
 
     public void expect(Expectation expectation) {
         expectation.check(this);
     }
 
+
     public static interface Expectation {
         void check(XMLRenderering source);
+    }
+
+    public static Expectation result(final Matcher<String> resultMatcher) {
+        return new Expectation() {
+            public void check(XMLRenderering source) {
+                assertThat(source.rendered, is(true));
+                assertThat(source.out.toString(), resultMatcher);
+            }
+        };
     }
 
     static public Expectation hasNotRenderered() {
