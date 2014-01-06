@@ -10,7 +10,5 @@ public interface XMLClosure {
 
     void include(ElementBuilder builder) throws IOException;
 
-    void surround(String name, ElementBuilder builder) throws IOException;
-
     void include(String xml) throws IOException;
 }

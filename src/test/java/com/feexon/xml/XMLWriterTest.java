@@ -55,46 +55,54 @@ public class XMLWriterTest {
 
     @Test
     public void surrounding() throws Exception {
-        writer.surround("xml", new Embody() {{
+        writer.include(element("xml").surround(new Embody() {{
             include(element("content").withNoText());
-        }});
+        }}));
+        assertResult(equalTo("<xml><content/></xml>"));
+    }
+
+    @Test
+    public void surrounding2() throws Exception {
+        writer.include(element("xml").surround(new Embody() {{
+            include(element("content").withNoText());
+        }}));
         assertResult(equalTo("<xml><content/></xml>"));
     }
 
     @Test
     public void surroundWithMultiElements() throws Exception {
-        writer.surround("xml", new Embody() {{
+        writer.include(element("xml").surround(new Embody() {{
             include(element("first").withNoText());
             include(element("last").withNoText());
-        }});
+        }}));
         assertResult(equalTo("<xml><first/><last/></xml>"));
     }
 
     @Test
     public void surroundWithSameElementMoreTimes() throws Exception {
-        writer.surround("xml", new Embody() {{
+        writer.include(element("xml").surround(new Embody() {{
             include(element("same").withNoText());
             include(element("same").withNoText());
-        }});
+        }}));
         assertResult(equalTo("<xml><same/><same/></xml>"));
     }
 
     @Test
     public void surroundWithElement() throws Exception {
-        writer.surround("xml", new Embody() {{
-            surround("articles", new Embody() {{
+        writer.include(element("xml").surround(new Embody() {{
+            include(element("articles").surround(new Embody() {{
                 include(element("article").withText("java"));
-            }});
-        }});
+            }}));
+        }}));
         assertResult(equalTo("<xml><articles><article><![CDATA[java]]></article></articles></xml>"));
     }
 
     @Test
     public void should_includeSelf_raiseException() throws Exception {
         try {
-            writer.surround("xml", new Embody() {{
-                surround("articles", this);
-            }});
+            writer.include(element("xml").surround(new Embody() {{
+                include(this);
+            }}));
             fail("should raise exception");
         } catch (IllegalArgumentException expected) {
 
@@ -103,7 +111,7 @@ public class XMLWriterTest {
 
     @Test
     public void include() throws Exception {
-        writer.include(new ElementBuilder(){
+        writer.include(new ElementBuilder() {
             public void writeTo(XMLClosure writer) throws IOException {
                 writer.include("<nested/>");
             }
@@ -113,24 +121,23 @@ public class XMLWriterTest {
 
     @Test
     public void includeWithSurrounding() throws Exception {
-        writer.surround("xml",new Embody(){{
-           include(new ElementBuilder() {
-               public void writeTo(XMLClosure writer) throws IOException {
-                   writer.include("<nested/>");
-               }
-           });
-        }});
+        writer.include(element("xml").surround(new Embody() {{
+            include(new ElementBuilder() {
+                public void writeTo(XMLClosure writer) throws IOException {
+                    writer.include("<nested/>");
+                }
+            });
+        }}));
         assertResult(equalTo("<xml><nested/></xml>"));
     }
 
     @Test
     public void includeTextWithSurrounding() throws Exception {
-        writer.surround("xml",new Embody(){{
-           include("<text/>");
-        }});
+        writer.include(element("xml").surround(new Embody() {{
+            include("<text/>");
+        }}));
         assertResult(equalTo("<xml><text/></xml>"));
     }
-
 
 
     @Test

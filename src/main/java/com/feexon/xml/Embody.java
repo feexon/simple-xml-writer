@@ -11,35 +11,6 @@ import java.util.List;
 public class Embody implements XMLClosure, ElementBuilder {
     private List<ElementBuilder> builders = new ArrayList<ElementBuilder>();
 
-    private static abstract class AbstractElementBuilder implements ElementBuilder {
-
-        protected String name;
-        protected Object value;
-
-        public AbstractElementBuilder(String name, Object value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        abstract public void writeTo(XMLClosure writer) throws IOException;
-
-    }
-
-    private static class EmbodyElement extends AbstractElementBuilder {
-        public EmbodyElement(String name, ElementBuilder definition) {
-            super(name, definition);
-        }
-
-        public void writeTo(XMLClosure writer) throws IOException {
-            writer.surround(name, (ElementBuilder) value);
-        }
-    }
-
-    public void surround(String name, ElementBuilder builder) {
-        checking(builder);
-        builders.add(new EmbodyElement(name, builder));
-    }
-
     private void checking(Object definition) {
         if (definition == this) {
             throw new IllegalArgumentException("Include self!");

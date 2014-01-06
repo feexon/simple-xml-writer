@@ -29,12 +29,6 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
         return "<![CDATA[" + value + "]]>";
     }
 
-    public void surround(String name, ElementBuilder builder) throws IOException {
-        include(startTag(name));
-        builder.writeTo(this);
-        include(endTag(name));
-    }
-
 
     public void include(String xml) throws IOException {
         out.write(xml);
@@ -46,10 +40,10 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
 
     static public ElementWriter element(final String name) {
         return new ElementWriter() {
-            private Object value;
+            public ElementBuilder body;
 
             public ElementBuilder withText(Object value) throws IOException {
-                this.value = value;
+                this.body = Including.content(data(value));
                 return this;
             }
 
@@ -57,10 +51,15 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
                 return this;
             }
 
+            public ElementBuilder surround(ElementBuilder body) {
+                this.body = body;
+                return this;
+            }
+
             public void writeTo(XMLClosure writer) throws IOException {
-                if (value != null) {
+                if (body != null) {
                     writer.include(startTag(name));
-                    writer.include(data(value));
+                    body.writeTo(writer);
                     writer.include(endTag(name));
                 } else {
                     writer.include("<" + name + "/>");
@@ -77,6 +76,7 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
 
         ElementBuilder withNoText() throws IOException;
 
+        ElementBuilder surround(ElementBuilder body);
     }
 
     public void close() {
