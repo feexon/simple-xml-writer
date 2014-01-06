@@ -1,9 +1,9 @@
 package com.feexon.xml;
 
-import com.feexon.xml.supports.XMLAssertion;
-import org.junit.Before;
 import org.junit.Test;
 
+import static com.feexon.xml.Including.content;
+import static com.feexon.xml.supports.XMLRenderering.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 /**
@@ -12,20 +12,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
  */
 public class IncludingTest {
 
-    private XMLAssertion assertion;
-
-    @Before
-    public void setUp() throws Exception {
-        assertion = new XMLAssertion();
-    }
 
     @Test
     public void include() throws Exception {
-        assertion.assertRendering(Including.content("<abc/>"), equalTo("<abc/>"));
+        render(content("<abc/>")).expect(xml(equalTo("<abc/>")));
     }
 
     @Test
     public void includeNull() throws Exception {
-        assertion.assertNotRendering(Including.content(null));
+        render(content(null)).expect(hasNotRenderered());
     }
 }

@@ -1,12 +1,11 @@
 package com.feexon.xml;
 
-import com.feexon.xml.supports.XMLAssertion;
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.feexon.xml.XMLWriter.content;
+import static com.feexon.xml.supports.XMLRenderering.*;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Administrator
@@ -14,31 +13,29 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class EmbodyTest {
 
-    private XMLAssertion assertion;
     private Embody embody;
 
     @Before
     public void setUp() throws Exception {
-        assertion = new XMLAssertion();
         embody = new Embody();
     }
 
     @Test
     public void includeText() throws Exception {
         embody.include("text");
-        assertion.assertRendering(embody, equalTo("text"));
+        render(embody).expect(xml(equalTo("text")));
     }
 
     @Test
     public void includeText_withNullValue() throws Exception {
         embody.include((String) null);
-        assertion.assertNotRendering(embody);
+        render(embody).expect(hasNotRenderered());
     }
 
     @Test
     public void include() throws Exception {
         embody.include(content("<element/>"));
-        assertion.assertRendering(embody, equalTo("<element/>"));
+        render(embody).expect(xml(equalTo("<element/>")));
     }
 
 }
