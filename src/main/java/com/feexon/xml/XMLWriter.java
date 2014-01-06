@@ -2,6 +2,8 @@ package com.feexon.xml;
 
 import java.io.*;
 
+import static com.feexon.xml.Including.content;
+
 /**
  * @author Administrator
  * @version 1.0 14-1-4,下午4:56
@@ -43,8 +45,7 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
             public ElementBuilder body;
 
             public ElementBuilder withText(Object value) throws IOException {
-                this.body = Including.content(data(value));
-                return this;
+               return surround(content(data(value)));
             }
 
             public ElementBuilder withNoText() throws IOException {
