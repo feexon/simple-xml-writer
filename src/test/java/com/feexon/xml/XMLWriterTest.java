@@ -132,15 +132,23 @@ public class XMLWriterTest {
         }}.assertClosed();
     }
 
+    @Test
+    public void flush() throws Exception {
+        new WriterSpy() {{
+            new XMLWriter(this).flush();
+        }}.assertFlushed();
+    }
+
     private static class WriterSpy extends Writer {
         private boolean closed = false;
+        private Boolean flashed=false;
 
         public void write(char[] buff, int off, int len) throws IOException {
 
         }
 
         public void flush() throws IOException {
-
+            flashed=true;
         }
 
         public void close() throws IOException {
@@ -149,6 +157,10 @@ public class XMLWriterTest {
 
         public void assertClosed() {
             assertThat(closed, equalTo(true));
+        }
+
+        public void assertFlushed() {
+            assertThat(flashed,equalTo(true));
         }
     }
 }
