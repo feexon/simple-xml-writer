@@ -1,14 +1,16 @@
 package com.feexon.xml;
 
-import java.io.*;
+import com.feexon.xml.syntax.ElementBuilder;
+import com.feexon.xml.syntax.ElementClause;
+import com.feexon.xml.syntax.XMLClause;
 
-import static com.feexon.xml.Including.content;
+import java.io.*;
 
 /**
  * @author Administrator
  * @version 1.0 14-1-4,下午4:56
  */
-public class XMLWriter implements XMLClosure, Closeable, Flushable {
+public class XMLWriter implements XMLClause, Closeable, Flushable {
     private Writer out;
 
     public XMLWriter(OutputStream out, String charset) throws UnsupportedEncodingException {
@@ -47,11 +49,11 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
         return Including.content(content);
     }
 
-    static public ElementClosure element(final String name) {
+    static public ElementClause element(final String name) {
         return new ElementWriter(name);
     }
 
-    private static class ElementWriter implements ElementClosure, ElementBuilder {
+    private static class ElementWriter implements ElementClause, ElementBuilder {
         private final String name;
         public ElementBuilder body;
 
@@ -72,7 +74,7 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
             return this;
         }
 
-        public void writeTo(XMLClosure writer) throws IOException {
+        public void writeTo(XMLClause writer) throws IOException {
             if (body != null) {
                 writer.include(startTag(name));
                 body.writeTo(writer);

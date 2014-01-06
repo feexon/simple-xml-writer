@@ -1,5 +1,8 @@
 package com.feexon.xml;
 
+import com.feexon.xml.syntax.ElementBuilder;
+import com.feexon.xml.syntax.XMLClause;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
  * @author Administrator
  * @version 1.0 14-1-4,下午5:25
  */
-public class Embody implements XMLClosure, ElementBuilder {
+public class Embody implements XMLClause, ElementBuilder {
     private List<ElementBuilder> builders = new ArrayList<ElementBuilder>();
 
     private void checking(Object definition) {
@@ -26,7 +29,7 @@ public class Embody implements XMLClosure, ElementBuilder {
         builders.add(builder);
     }
 
-    public void writeTo(XMLClosure writer) throws IOException {
+    public void writeTo(XMLClause writer) throws IOException {
         checking(writer);
         for (ElementBuilder builder : builders) {
             builder.writeTo(writer);

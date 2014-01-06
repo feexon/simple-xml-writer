@@ -1,4 +1,4 @@
-package com.feexon.xml;
+package com.feexon.xml.syntax;
 
 import java.io.IOException;
 
@@ -6,7 +6,7 @@ import java.io.IOException;
  * @author Administrator
  * @version 1.0 14-1-4,下午5:49
  */
-public interface XMLClosure {
+public interface XMLClause {
 
     void include(ElementBuilder builder) throws IOException;
 

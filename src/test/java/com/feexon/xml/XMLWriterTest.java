@@ -1,6 +1,8 @@
 package com.feexon.xml;
 
 
+import com.feexon.xml.syntax.ElementBuilder;
+import com.feexon.xml.syntax.XMLClause;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
@@ -118,7 +120,7 @@ public class XMLWriterTest {
     @Test
     public void include() throws Exception {
         writer.include(new ElementBuilder() {
-            public void writeTo(XMLClosure writer) throws IOException {
+            public void writeTo(XMLClause writer) throws IOException {
                 writer.include("<nested/>");
             }
         });
@@ -129,7 +131,7 @@ public class XMLWriterTest {
     public void includeWithSurrounding() throws Exception {
         writer.include(element("xml").surround(new Embody() {{
             include(new ElementBuilder() {
-                public void writeTo(XMLClosure writer) throws IOException {
+                public void writeTo(XMLClause writer) throws IOException {
                     writer.include("<nested/>");
                 }
             });

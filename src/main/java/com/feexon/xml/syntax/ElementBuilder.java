@@ -1,4 +1,4 @@
-package com.feexon.xml;
+package com.feexon.xml.syntax;
 
 import java.io.IOException;
 
@@ -7,5 +7,5 @@ import java.io.IOException;
  * @version 1.0 14-1-4,下午5:58
  */
 public interface ElementBuilder {
-    void writeTo(XMLClosure writer) throws IOException;
+    void writeTo(XMLClause writer) throws IOException;
 }

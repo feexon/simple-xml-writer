@@ -1,5 +1,8 @@
 package com.feexon.xml;
 
+import com.feexon.xml.syntax.ElementBuilder;
+import com.feexon.xml.syntax.XMLClause;
+
 import java.io.IOException;
 
 /**
@@ -17,7 +20,7 @@ public class Including implements ElementBuilder {
         return new Including(body);
     }
 
-    public void writeTo(XMLClosure writer) throws IOException {
+    public void writeTo(XMLClause writer) throws IOException {
         if (body != null) {
             writer.include(body);
         }
