@@ -43,44 +43,46 @@ public class XMLWriter implements XMLClosure, Closeable, Flushable {
         builder.writeTo(this);
     }
 
-    static public ElementWriter element(final String name) {
-        return new ElementWriter() {
-            public ElementBuilder body;
-
-            public ElementBuilder withText(Object value) throws IOException {
-               return surround(content(data(value)));
-            }
-
-            public ElementBuilder withNoText() throws IOException {
-                return this;
-            }
-
-            public ElementBuilder surround(ElementBuilder body) {
-                this.body = body;
-                return this;
-            }
-
-            public void writeTo(XMLClosure writer) throws IOException {
-                if (body != null) {
-                    writer.include(startTag(name));
-                    body.writeTo(writer);
-                    writer.include(endTag(name));
-                } else {
-                    writer.include("<" + name + "/>");
-                }
-            }
-
-
-        };
+    static public ElementBuilder content(String content){
+        return Including.content(content);
     }
 
-    public static interface ElementWriter extends ElementBuilder {
+    static public ElementClosure element(final String name) {
+        return new ElementWriter(name);
+    }
 
-        ElementBuilder withText(Object value) throws IOException;
+    private static class ElementWriter implements ElementClosure, ElementBuilder {
+        private final String name;
+        public ElementBuilder body;
 
-        ElementBuilder withNoText() throws IOException;
+        public ElementWriter(String name) {
+            this.name = name;
+        }
 
-        ElementBuilder surround(ElementBuilder body);
+        public ElementBuilder withText(Object value) throws IOException {
+            return surround(content(data(value)));
+        }
+
+        public ElementBuilder withNoText() throws IOException {
+            return this;
+        }
+
+        public ElementBuilder surround(ElementBuilder body) {
+            this.body = body;
+            return this;
+        }
+
+        public void writeTo(XMLClosure writer) throws IOException {
+            if (body != null) {
+                writer.include(startTag(name));
+                body.writeTo(writer);
+                writer.include(endTag(name));
+            } else {
+                writer.include("<" + name + "/>");
+            }
+        }
+
+
     }
 
     public void close() {
